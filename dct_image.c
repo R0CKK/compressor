@@ -7,6 +7,7 @@
 #define COLS 1080
 #define BLOCK_SIZE 8
 #define m_pi   3.14159265358979323846264338327950288
+/// Go to LINE 8000///
 /* stb_image - v2.30 - public domain image loader - http://nothings.org/stb
                                   no warranty implied; use at your own risk
 
