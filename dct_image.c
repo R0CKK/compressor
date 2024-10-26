@@ -8131,7 +8131,6 @@ void process_channel(unsigned char **channel_matrix, int **quantization_matrix, 
 
     fclose(file);
 
-    // Free the matrices
     for (int i = 0; i < ROWS; i++) {
         free(dct_matrix[i]);
         free(quantized_matrix[i]);
@@ -8143,34 +8142,28 @@ void process_channel(unsigned char **channel_matrix, int **quantization_matrix, 
 int main() {
     int width, height, channels;
 
-    // Load the image
     unsigned char *image_data = stbi_load("image.png", &width, &height, &channels, 0);
     if (image_data == NULL) {
         printf("Error loading image\n");
         return 1;
     }
 
-    // Set global dimensions
     height = ROWS;
     width = COLS;
 
-    // Create and populate the matrix
     unsigned char **image_matrix = create_matrix(height, width, channels);
     populate_matrix(image_matrix, image_data, width, height, channels);
 
-    // Allocate and generate quantization matrix
     int **quantization_matrix = (int **)malloc(ROWS * sizeof(int *));
     for (int i = 0; i < ROWS; i++) {
         quantization_matrix[i] = (int *)malloc(COLS * sizeof(int));
     }
     generate_quantization_matrix(quantization_matrix);
 
-    // Separate channels and process each
     unsigned char **red_channel = create_matrix(height, width, 1);
     unsigned char **green_channel = create_matrix(height, width, 1);
     unsigned char **blue_channel = create_matrix(height, width, 1);
 
-    // Extract each color channel
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             red_channel[i][j] = image_matrix[i][j * channels];
@@ -8179,12 +8172,10 @@ int main() {
         }
     }
 
-    // Process each channel
     process_channel(red_channel, quantization_matrix, "quantized_red.txt");
     process_channel(green_channel, quantization_matrix, "quantized_green.txt");
     process_channel(blue_channel, quantization_matrix, "quantized_blue.txt");
 
-    // Free memory
     for (int i = 0; i < height; i++) {
         free(image_matrix[i]);
         free(red_channel[i]);
